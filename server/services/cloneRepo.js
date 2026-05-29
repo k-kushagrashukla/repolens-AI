@@ -5,15 +5,31 @@ const fs = require('fs-extra')
 const git = simpleGit()
 
 async function cloneRepo(repoUrl) {
-  const repoName = `repo-${Date.now()}`
+  try {
+    const repoName = `repo-${Date.now()}`
 
-  const repoPath = path.join(__dirname, '..', 'temp', repoName)
+    const repoPath = path.join(
+      __dirname,
+      '..',
+      'temp',
+      repoName
+    )
 
-  await fs.ensureDir(repoPath)
+    await fs.ensureDir(repoPath)
 
-  await git.clone(repoUrl, repoPath)
+    console.log('Cloning repo...')
 
-  return repoPath
+    await git.clone(repoUrl, repoPath)
+
+    console.log('Clone complete')
+
+    return repoPath
+  } catch (error) {
+    console.log('CLONE ERROR:')
+    console.log(error)
+
+    throw error
+  }
 }
 
 module.exports = cloneRepo
