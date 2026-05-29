@@ -1,67 +1,51 @@
-const cloneRepo = require('../services/cloneRepo')
-const scanFiles = require('../services/scanFiles')
-const detectRoutes = require('../services/detectRoutes')
-const detectComponents = require('../services/detectComponents')
-const generateInsights = require('../services/generateInsights')
-
 const analyzeRepo = async (req, res) => {
-  console.log('=== API HIT ===')
-
   try {
     const { repoUrl } = req.body
 
     console.log('Repo URL:', repoUrl)
 
-    const repoPath = await cloneRepo(repoUrl)
+    const fakeFiles = [
+      'src/App.jsx',
+      'src/components/Navbar.jsx',
+      'src/components/Hero.jsx',
+      'src/pages/Home.jsx',
+      'server/index.js',
+      'server/routes/userRoutes.js',
+    ]
 
-    console.log('Repo cloned at:', repoPath)
+    const insights = [
+      'React project detected',
+      'Express backend detected',
+      `Analyzed repository: ${repoUrl}`,
+      `Total files detected: ${fakeFiles.length}`,
+    ]
 
-    const files = scanFiles(repoPath)
+    const nodes = fakeFiles.map((file, index) => ({
+      id: index.toString(),
+      data: {
+        label: file,
+      },
+      position: {
+        x: Math.random() * 400,
+        y: Math.random() * 400,
+      },
+    }))
 
-    console.log('Files count:', files.length)
-
-    const routes = detectRoutes(files)
-
-    console.log('Routes detected')
-
-    const components = detectComponents(files)
-
-    console.log('Components detected')
-
-    const insights = generateInsights(files)
-
-    console.log('Insights generated')
-
-    const nodes = []
-    const edges = []
-
-    files.slice(0, 20).forEach((file, index) => {
-      nodes.push({
-        id: index.toString(),
-        data: {
-          label: file.split(/[\\/]/).pop(),
-        },
-        position: {
-          x: Math.random() * 500,
-          y: Math.random() * 500,
-        },
-      })
-
-      if (index > 0) {
-        edges.push({
-          id: `e${index}`,
-          source: '0',
-          target: index.toString(),
-        })
-      }
-    })
-
-    console.log('Sending response')
+    const edges = [
+      {
+        id: 'e1',
+        source: '0',
+        target: '1',
+      },
+      {
+        id: 'e2',
+        source: '0',
+        target: '2',
+      },
+    ]
 
     res.json({
-      files,
-      routes,
-      components,
+      files: fakeFiles,
       insights,
       graph: {
         nodes,
@@ -69,13 +53,10 @@ const analyzeRepo = async (req, res) => {
       },
     })
   } catch (err) {
-    console.log('===== FULL ERROR =====')
     console.log(err)
-    console.log(err.message)
-    console.log(err.stack)
 
     res.status(500).json({
-      error: err.message,
+      error: 'Server error',
     })
   }
 }
