@@ -1,0 +1,11 @@
+.app {
+  min-height: 100vh;
+  padding: 30px;
+  background: #020617;
+}
+
+.title {
+  text-align: center;
+  font-size: 42px;
+  margin-bottom: 30px;
+}

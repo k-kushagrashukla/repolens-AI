@@ -1,0 +1,17 @@
+.insights-container {
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.insights-container h2 {
+  margin-bottom: 20px;
+}
+
+.insight-card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}

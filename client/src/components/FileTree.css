@@ -1,0 +1,17 @@
+.filetree-container {
+  background: #0f172a;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+}
+
+.filetree-container h2 {
+  margin-bottom: 20px;
+}
+
+.file-item {
+  padding: 8px;
+  background: #1e293b;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
