@@ -5,26 +5,32 @@ const detectComponents = require('../services/detectComponents')
 const generateInsights = require('../services/generateInsights')
 
 const analyzeRepo = async (req, res) => {
-  try {
-    console.log('Request received')
+  console.log('=== API HIT ===')
 
+  try {
     const { repoUrl } = req.body
 
     console.log('Repo URL:', repoUrl)
 
     const repoPath = await cloneRepo(repoUrl)
 
-    console.log('Repo cloned')
+    console.log('Repo cloned at:', repoPath)
 
     const files = scanFiles(repoPath)
 
-    console.log('Files scanned')
+    console.log('Files count:', files.length)
 
     const routes = detectRoutes(files)
 
+    console.log('Routes detected')
+
     const components = detectComponents(files)
 
+    console.log('Components detected')
+
     const insights = generateInsights(files)
+
+    console.log('Insights generated')
 
     const nodes = []
     const edges = []
@@ -33,7 +39,7 @@ const analyzeRepo = async (req, res) => {
       nodes.push({
         id: index.toString(),
         data: {
-          label: file.split('\\').pop(),
+          label: file.split(/[\\/]/).pop(),
         },
         position: {
           x: Math.random() * 500,
@@ -63,11 +69,13 @@ const analyzeRepo = async (req, res) => {
       },
     })
   } catch (err) {
-    console.log('ERROR:')
+    console.log('===== FULL ERROR =====')
     console.log(err)
+    console.log(err.message)
+    console.log(err.stack)
 
     res.status(500).json({
-      error: 'Failed to analyze repo',
+      error: err.message,
     })
   }
 }
